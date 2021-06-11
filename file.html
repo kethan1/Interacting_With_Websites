@@ -3,26 +3,53 @@
 <head>
     <script src="hi.js"></script>
     <style>
-        .test_class {
-            font-size: 5vw
+        .test_class { /* Class, can be used by `class="test_class"` */
+            color: blue;
         }
-        div#testID_DIV {
+        div { /* Applies to all div elements */
+            font-size: 8vw;
+        }
+        div#testID_DIV { /* Applies to all div elements with the id testID_DIV */
             color: green;
             font-size: 5vw;
         }
-        div > p {
+        div p { /* Applies to all p elements anywhere inside of a div */
             color: gray;
         }
-        p + p {
-            color: blue;
+        div > p { /* Applies to all p elements that are immediate children of divs */
+            color: lightblue;
         }
-        div p#hiho {
+        p + p { /* Applies to p tags directly after another p tag */
+            color: darkblue;
+        }
+        p ~ p { /* Applies to p tags that are after another p tag but share the same parent */
+            color: darkgreen;
+        }
+        a[href$='.org'] { /* Selecting with attributes */
+            color: black;
+        }
+        a[href$='.com'] {
             color: green;
         }
+        a[href^='http://'] {
+            color: red;
+        }
+        a[href^='https://'] {
+            color: green;
+        }
+        input[type='number'] {
+            background-color: orange;
+        }
+        /*
+        Useful Links:
+        https://stackoverflow.com/a/1139776/13710015 - what is plus sign
+        https://stackoverflow.com/a/3225905/13710015 - what is greater than sign (and what is space)
+        https://stackoverflow.com/a/10782297/13710015 - what is tilde
+        */
     </style>
 </head>
 <body>
-    <h1>Hi!</h1>
+    <h1 class="test_class">Hi!</h1>
     <div>
         <p>Testing123</p>
         <a href="https://google.com">Test Link</a>
@@ -36,7 +63,7 @@
             <p id="hiho">Ho</p>
         </span>
     </div>
-    <a href="https://github.com">Github</a>
+    <a href="http://github.com">Github</a>
     <button>Submit</button>
 </body>
 </html>

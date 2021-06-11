@@ -1,10 +1,13 @@
 import bs4
 
-file_name = input("File name: ")
-with open(file_name) as input_file:
-    parsed = bs4.BeautifulSoup(input_file.read(), "html.parser")
+while True:
+    try:
+        with open(input("File name: ")) as input_file:
+            parsed = bs4.BeautifulSoup(input_file.read(), "html.parser")
+        break
+    except FileNotFoundError:
+        print("File Not Found")
 
 while (what_tag := input("What element do you want: ")) != "quit":
-    print(f"The first {what_tag} is:\n{parsed.find(what_tag)}\n")
-    print(f"The contents are:\n{''.join(str(tag) for tag in parsed.find(what_tag).contents)}\n")
-    print(f"The attributes are:\n{parsed.find(what_tag).attrs}")
+    for element_found in parsed.select(what_tag):
+        print(f"- {element_found}, \n   contents: {''.join(str(tag) for tag in element_found.contents)}, \n   attributes: {element_found.attrs}")

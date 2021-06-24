@@ -1,8 +1,7 @@
 import time
 import random
 import getpass
-import re
-from pprint import pprint
+import json
 from typing import List
 
 from selenium import webdriver
@@ -15,7 +14,17 @@ from selenium.common.exceptions import TimeoutException
 import bs4
 
 
+class EnterEmail(Exception):
+    pass
+
+
 email = input("Enter your email: ")
+if not email:
+    try:
+        with open("email.json") as email_file:
+            email = json.load(email_file)["email"]
+    except FileNotFoundError:
+        raise EnterEmail("Please enter a valid email!")
 password = getpass.getpass("Enter your password: ")
 
 profile = webdriver.FirefoxProfile()
@@ -64,21 +73,8 @@ WebDriverWait(wd, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'div
 unread_emails = wd.find_element_by_css_selector('div + div.Cp > div > table[aria-readonly=true][cellpadding="0"][role="grid"] > tbody').get_attribute('innerHTML')
 
 parsed_unread_emails = bs4.BeautifulSoup(unread_emails, features="html.parser")
-print(parsed_unread_emails)
 email_text_list: List[str] = [element.get_text().replace("Click to teach Personal Website Mail this conversation is important.unread, ", "").replace("\u200c \u200c ", " ").replace("\u200c \u200c", " ").replace("\xa0", " ").replace("\u200b", "").replace("\u200c", "") for element in parsed_unread_emails]
-# for element in parsed_unread_emails:
-#     print(element.get_text().replace("Click to teach Personal Website Mail this conversation is important.unread, ", ""))
-#     print("\n")
-print(email_text_list)
-# email_text = parsed_unread_emails.get_text().replace("Click to teach Personal Website Mail this conversation is important.unread, ", "")
-# print(email_text)
-# print()
-# months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-# rx = re.compile(fr"\b\S.*?(?:{'|'.join(months)})" + r"\s+\d{1,2}", re.I)
-# email_text_list = list(filter(None, [month_split.lstrip(", ") for AM_split in re.split(r'(?<=.AM)', email_text) for PM_split in re.split(r'(?<=.PM)', AM_split) for month_split in rx.findall(PM_split)]))
-# pprint(email_text_list)
 
-# print()
 if not email_text_list:
     print("You have no unread emails!")
 else:
@@ -89,5 +85,5 @@ else:
         print(f"Email From: {unread_email.split(', ')[0]}")
         print(f"Email Title: {unread_email.split(', ')[1]}")
         print(f"Email Send On: {unread_email.split(', ')[2]}")
-        print(f"Email Content: {unread_email.split(', ')[3].split(unread_email.split(', ')[0])[0]}")
+        print(f"Email Content: {', '.join(unread_email.split(', ')[3:]).split(unread_email.split(', ')[0])[0].rstrip('.')}")
         print()

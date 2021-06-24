@@ -12,7 +12,7 @@ wd.get("https://www.google.com/search?q=python")
 
 # The css selector is needed, because not all a tags are clickable
 WebDriverWait(wd, 20).until(
-    expected_conditions.element_to_be_clickable((By.CSS_SELECTOR, 'div[id=search] a[href^="http"] '))
+    expected_conditions.element_to_be_clickable((By.CSS_SELECTOR, 'div[id=search] a[href^="http"]'))
 ).click()
 
 # WebDriverWait(wd, 20).until(

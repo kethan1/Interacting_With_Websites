@@ -9,7 +9,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import TimeoutException
 
 import bs4
 
@@ -24,7 +23,10 @@ if not email:
         with open("email.json") as email_file:
             email = json.load(email_file)["email"]
     except FileNotFoundError:
-        raise EnterEmail("Please enter a valid email!")
+        raise EnterEmail(
+            "Please enter a valid email, or create an emails.json \
+            file with the key 'email' as your email!"
+        )
 password = getpass.getpass("Enter your password: ")
 
 profile = webdriver.FirefoxProfile()
